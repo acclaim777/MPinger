@@ -36,7 +36,7 @@
                         <DataGridTextColumn Header="ID" x:Name="ID" Width="auto" Binding ="{Binding Id}"/>
                         <DataGridTextColumn Header="IP Address" x:Name="Pingable" Width="auto" Binding ="{Binding IPAddress}"/>
                         <DataGridTextColumn Header="Name" x:Name="Name" Width="auto" Binding ="{Binding Name}"/>
-                        <DataGridTextColumn Header="Name" x:Name="Group" Width="auto" Binding ="{Binding Group}"/>
+                        <DataGridTextColumn Header="Group" x:Name="Group" Width="auto" Binding ="{Binding Group}"/>
 
                     </DataGrid.Columns>
                 </DataGrid>
