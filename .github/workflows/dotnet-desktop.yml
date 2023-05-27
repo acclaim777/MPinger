@@ -59,6 +59,7 @@ jobs:
     env:
       Solution_Name: MPinger.sln                         # Replace with your solution name, i.e. MyWpfApp.sln.
       Test_Project_Path: MPinger\MPinger.csproj                # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
+      Wap_Project_Directory: MPinger\MPinger.csproj
 
     steps:
     - name: Checkout
