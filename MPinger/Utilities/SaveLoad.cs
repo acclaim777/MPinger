@@ -1,5 +1,7 @@
-﻿using System;
+﻿using MPinger.Models;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,6 +12,12 @@ namespace MPinger.Utilities
 {
     public static class SaveLoad
     {
+        /// <summary>
+        /// Generic Load System based on XML Deserializer
+        /// </summary>
+        /// <typeparam name="T">your model</typeparam>
+        /// <param name="FileName">file name for load</param>
+        /// <returns></returns>
         public static T Load<T>(string FileName)
         {
             Object rslt;
@@ -28,6 +36,13 @@ namespace MPinger.Utilities
             }
         }
 
+        /// <summary>
+        /// Generic Save System based on XML Serializer
+        /// </summary>
+        /// <typeparam name="T">your model</typeparam>
+        /// <param name="FileName">file name for save</param>
+        /// <param name="Obj">actual object based on model</param>
+        /// <returns></returns>
         public static bool Save<T>(string FileName, Object Obj)
         {
             var xs = new XmlSerializer(typeof(T));
@@ -40,34 +55,44 @@ namespace MPinger.Utilities
             else return false;
         }
 
-        public static bool Save2(string FileName, Object Obj)
+        /// <summary>
+        /// Load ping Stations
+        /// </summary>
+        /// <param name="FileName">file name for load</param>
+        /// <returns></returns>
+        public static ObservableCollection<PingStationModel> LoadPingStations(string FileName)
         {
-            var xs = new XmlSerializer(Obj.GetType());
-            using (TextWriter sw = new StreamWriter(FileName))
-            {
-                xs.Serialize(sw, Obj);
-            }
-            if (File.Exists(FileName))
-                return true;
-            else return false;
-        }
-
-        public static Object Load2(string FileName)
-        {
-            Object rslt;
+            ObservableCollection<PingStationModel> PingStations;
             if (File.Exists(FileName))
             {
-                var xs = new XmlSerializer(typeof(Object));
-                using (var sr = new StreamReader(FileName))
-                {
-                    rslt = (Object)xs.Deserialize(sr);
-                }
-                return (Object)rslt;
+                PingStations = SaveLoad.Load<ObservableCollection<PingStationModel>>(FileName);
             }
             else
             {
-                return default(Object);
+                PingStations = new ObservableCollection<PingStationModel>();
             }
+            return PingStations;
         }
+
+        /// <summary>
+        /// Save ping Stations
+        /// </summary>
+        /// <param name="FileName">file name for save</param>
+        /// <param name="pingStations">actual object</param>
+        public static void SavePingStations(string FileName, ObservableCollection<PingStationModel> pingStations)
+        {
+            ObservableCollection<PingStationModel> _savePingStations = new ObservableCollection<PingStationModel>();
+            foreach (var item in pingStations)
+            {
+                item.Pingable = false;
+                item.Description = string.Empty;
+
+                _savePingStations.Add(item);
+            }
+
+            SaveLoad.Save<ObservableCollection<PingStationModel>>(FileName, _savePingStations);
+
+        }
+
     }
 }

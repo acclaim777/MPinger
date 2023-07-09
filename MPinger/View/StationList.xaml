@@ -5,42 +5,48 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MPinger.View"
         mc:Ignorable="d"
-        Title="StationList" Height="450" Width="800">
-    <Grid>
+        Title="StationList" Height="450" Width="800"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <DockPanel LastChildFill="True">
 
-        <Grid Grid.Row="0">
-            <Border BorderThickness="1" BorderBrush="Gray" CornerRadius="2">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+        <ToolBarTray DockPanel.Dock="Top">
 
-                    <Button x:Name="BT_LoadList" Content="Load" Click="BT_LoadList_Click" Margin="3" Grid.Column="0"/>
-                    <Button x:Name="BT_SaveList" Content="Save" Click="BT_SaveList_Click" Margin="3" Grid.Column="1"/>
-                    <Button x:Name="BT_ImportFromCSV" Content="Import CSV" Click="BT_ImportFromCSV_Click" Margin="3" Grid.Column="2"/>
-                </Grid>
-            </Border>
+            <ToolBar>
+                <Button x:Name="BT_AddStation" Content="{materialDesign:PackIcon Kind=Add}" ToolTip="Add Station" Click="BT_AddStation_Click" Margin="3" Grid.Column="3"/>
+                <Button x:Name="BT_DelStation" Content="{materialDesign:PackIcon Kind=Delete}" ToolTip="Delete Station" Click="BT_DelStation_Click" Margin="3" Grid.Column="3"/>
+                <!--<Separator Margin="20 0"/>
+                <Button x:Name="BT_SaveList" Content="{materialDesign:PackIcon Kind=ContentSave}" ToolTip="Save List" Click="BT_SaveList_Click" Margin="3" Grid.Column="3"/>-->
+                <Separator Margin="20 0"/>
+                <Button x:Name="BT_ImportFromCSV" Content="{materialDesign:PackIcon Kind=Import}" ToolTip="Import csv file" Click="BT_ImportFromCSV_Click" Margin="3" Grid.Column="0"/>
+                <Button x:Name="BT_ExportCSV" Content="{materialDesign:PackIcon Kind=Export}" ToolTip="Export csv file" Click="BT_ExportCSV_Click" Margin="3" Grid.Column="0"/>
+            </ToolBar>
+
+        </ToolBarTray>
+        <Grid>
+            <Grid>
+                <Border BorderThickness="1" BorderBrush="Gray" CornerRadius="2">
+                    <DataGrid AutoGenerateColumns="False" 
+                              CanUserAddRows="False"
+                              Name="DG_stationList" 
+                              ItemsSource="{Binding PingStations}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" x:Name="ID" Width="auto" Binding ="{Binding Id}"/>
+                            <DataGridTextColumn Header="IP Address" x:Name="Pingable" Width="auto" Binding ="{Binding IPAddress}"/>
+                            <DataGridTextColumn Header="Name" x:Name="Name" Width="auto" Binding ="{Binding Name}"/>
+                            <DataGridTextColumn Header="Group" x:Name="Group" Width="auto" Binding ="{Binding Group}"/>
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+            </Grid>
         </Grid>
-
-        <Grid Grid.Row="1">
-            <Border BorderThickness="1" BorderBrush="Gray" CornerRadius="2">
-                <DataGrid AutoGenerateColumns="False" Name="DG_stationList">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID" x:Name="ID" Width="auto" Binding ="{Binding Id}"/>
-                        <DataGridTextColumn Header="IP Address" x:Name="Pingable" Width="auto" Binding ="{Binding IPAddress}"/>
-                        <DataGridTextColumn Header="Name" x:Name="Name" Width="auto" Binding ="{Binding Name}"/>
-                        <DataGridTextColumn Header="Group" x:Name="Group" Width="auto" Binding ="{Binding Group}"/>
-
-                    </DataGrid.Columns>
-                </DataGrid>
-            </Border>
-        </Grid>
-    </Grid>
+    </DockPanel>
 </Window>

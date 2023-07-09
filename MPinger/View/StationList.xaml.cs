@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using MPinger.Models;
 using MPinger.Utilities;
 using System;
 using System.Collections.Generic;
@@ -23,19 +24,20 @@ namespace MPinger.View
     /// </summary>
     public partial class StationList : Window
     {
+        public ObservableCollection<PingStationModel> PingStations
+        {
+            get => GlobalVariables.PingStations;
+            set
+            {
+                GlobalVariables.PingStations = value;
+            }
+        }
+
         public StationList()
         {
+            DataContext = this;
             InitializeComponent();
-        }
-
-        private void BT_SaveList_Click(object sender, RoutedEventArgs e)
-        {
-            MainWindowVM.savePingList();
-        }
-
-        private void BT_LoadList_Click(object sender, RoutedEventArgs e)
-        {
-            DG_stationList.ItemsSource = MainWindowVM.PingStations;
+            
         }
 
         private void BT_ImportFromCSV_Click(object sender, RoutedEventArgs e)
@@ -47,15 +49,41 @@ namespace MPinger.View
 
             if (openFileDialog.FileName != "")
             {
-                MainWindowVM.PingStations = new ObservableCollection<PingStationModel>();
+                PingStations = new ObservableCollection<PingStationModel>();
 
-                ObservableCollection < PingStationModel > devices = ReadFromCSV.ReadCSV(openFileDialog.FileName);
+                ObservableCollection < PingStationModel > devices = CSVHelper.ReadCSV(openFileDialog.FileName);
 
                 foreach (var device in devices)
                 {
-                    MainWindowVM.PingStations.Add(device);
+                    PingStations.Add(device);
                 }
+                DG_stationList.ItemsSource = PingStations;
+            }
+        }
 
+        private void BT_AddStation_Click(object sender, RoutedEventArgs e)
+        {
+            PingStations.Add(new PingStationModel { Id = PingStations.Count + 1 });
+        }
+
+        private void BT_DelStation_Click(object sender, RoutedEventArgs e)
+        {
+            if (DG_stationList.SelectedIndex>=0)
+            {
+                PingStations.RemoveAt(DG_stationList.SelectedIndex);
+            }
+        }
+
+        private void BT_ExportCSV_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "CSV UTF-8 (Comma delimated) (*.csv)|*.csv";
+            saveFileDialog.Title = "Save CSV file";
+            saveFileDialog.ShowDialog();
+
+            if (saveFileDialog.FileName != "")
+            {
+                CSVHelper.WriteCSV(PingStations,saveFileDialog.FileName);
             }
         }
     }

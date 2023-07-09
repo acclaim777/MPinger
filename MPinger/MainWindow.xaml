@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MPinger"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1000"
+        Title="MPinger" Height="600" Width="1000"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -23,6 +23,10 @@
                 <!--<Button x:Name="BT_Cancel" Content="Cancel" Click="BT_Cancel_Click" Margin="3" Grid.Column="1"/>-->
                 <Button x:Name="BT_EditList" Content="{materialDesign:PackIcon Kind=Edit}" ToolTip="Edit List" Click="BT_EditList_Click" Margin="3" Grid.Column="2"/>
                 <Button x:Name="BT_ReloadList" Content="{materialDesign:PackIcon Kind=Reload}" ToolTip="Reload List" Click="BT_ReloadList_Click" Margin="3" Grid.Column="3"/>
+                <Separator Margin="20 0"/>
+                <Button x:Name="BT_NewList" Content="{materialDesign:PackIcon Kind=File}" ToolTip="new List" Click="BT_NewList_Click" Margin="3" Grid.Column="3"/>
+                <Button x:Name="BT_OpenList" Content="{materialDesign:PackIcon Kind=FolderOpen}" ToolTip="Open List" Click="BT_OpenList_Click" Margin="3" Grid.Column="3"/>
+                <Button x:Name="BT_SaveList" Content="{materialDesign:PackIcon Kind=ContentSave}" ToolTip="Save List" Click="BT_SaveList_Click" Margin="3" Grid.Column="3"/>
             </ToolBar>
 
         </ToolBarTray>

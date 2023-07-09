@@ -1,4 +1,5 @@
-﻿using MPinger.Utilities;
+﻿using MPinger.Models;
+using MPinger.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,36 +13,56 @@ using System.Threading.Tasks;
 
 namespace MPinger
 {
-    public class MainWindowVM
+    public class MainWindowVM : INotifyPropertyChanged
     {
-        private static ObservableCollection<PingStationModel> pingStations;
 
-        public static ObservableCollection<PingStationModel> PingStations
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
         {
-            get => pingStations;
-            set => pingStations = value;
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                Debug.WriteLine("Property Updated :" + propertyName);
+            }
         }
 
+        public ObservableCollection<PingStationModel> PingStations
+        {
+            get => GlobalVariables.PingStations;
+            set
+            {
+                GlobalVariables.PingStations = value;
+                OnPropertyChanged(nameof(PingStations));
+            }
+        }
+
+        /// <summary>
+        /// constructor
+        /// </summary>
         public MainWindowVM()
         {
             readPingList();
         }
 
-
         #region working with lists
         private void readPingList()
         {
-            if (File.Exists("PingStationList.DAT"))
+            //if (File.Exists("PingStationList.DAT"))
+            //{
+            //    PingStations = SaveLoad.Load<ObservableCollection<PingStationModel>>("PingStationList.DAT");
+            //}
+            //else
+            //{
+            //    PingStations = new ObservableCollection<PingStationModel>();
+            //}
+            if (GlobalVariables.settings.LastLoadedFile != "" || GlobalVariables.settings.LastLoadedFile != null)
             {
-                PingStations = SaveLoad.Load<ObservableCollection<PingStationModel>>("PingStationList.DAT");
-            }
-            else
-            {
-                PingStations = new ObservableCollection<PingStationModel>();
+                PingStations = SaveLoad.LoadPingStations(GlobalVariables.settings.LastLoadedFile);
             }
         }
 
-        public static void savePingList()
+        public void savePingList()
         {
             ObservableCollection<PingStationModel> _savePingStations = new ObservableCollection<PingStationModel>();
             foreach (var item in PingStations)
