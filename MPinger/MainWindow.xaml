@@ -51,6 +51,15 @@
                                 <CheckBox IsChecked="{Binding Pingable,UpdateSourceTrigger=PropertyChanged}" IsEnabled="False"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Pingable}" Value="True">
+                                        <Setter Property="Background" Value="DarkGreen"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGridTemplateColumn.CellStyle>
                     </DataGridTemplateColumn>
 
                     <DataGridTextColumn Header="Description" x:Name="Description" Width="auto" Binding ="{Binding Description}"/>

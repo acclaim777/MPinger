@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,33 +20,50 @@ namespace MPinger
 
             if (device.IPAddress != "")
             {
+                IPAddress ip;
+                bool ValidateIP = IPAddress.TryParse(device.IPAddress, out ip);
 
-                try
+                if (ValidateIP)
                 {
-                    pinger = new Ping();
-                    PingReply reply = pinger.Send(device.IPAddress.Trim());
-                    pingable = reply.Status == IPStatus.Success;
+                    try
+                    {
+                        pinger = new Ping();
+                        PingReply reply = pinger.Send(device.IPAddress.Trim());
+                        pingable = reply.Status == IPStatus.Success;
+                        ResultPing.PingResultStations.Add(new PingStationModel
+                        {
+                            Id = device.Id,
+                            Name = device.Name,
+                            IPAddress = device.IPAddress,
+                            Pingable = pingable,
+                            Description = reply.Status.ToString()
+                        });
+
+                    }
+                    catch (PingException)
+                    {
+                        // Discard PingExceptions and return false;
+                    }
+                    finally
+                    {
+                        if (pinger != null)
+                        {
+                            pinger.Dispose();
+                        }
+                    }
+                }
+                else
+                {
                     ResultPing.PingResultStations.Add(new PingStationModel
                     {
                         Id = device.Id,
                         Name = device.Name,
                         IPAddress = device.IPAddress,
-                        Pingable = pingable,
-                        Description = reply.Status.ToString()
+                        Pingable = false,
+                        Description = "Not a Valid IP address"
                     });
+                }
 
-                }
-                catch (PingException)
-                {
-                    // Discard PingExceptions and return false;
-                }
-                finally
-                {
-                    if (pinger != null)
-                    {
-                        pinger.Dispose();
-                    }
-                }
             }
         }
     }
